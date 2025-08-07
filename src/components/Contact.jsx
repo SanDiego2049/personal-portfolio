@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,26 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState("");
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    if (sectionRef.current) {
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+          },
+        }
+      );
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,21 +44,18 @@ const Contact = () => {
     setSubmitStatus("");
 
     try {
-      const serviceID = "service_yi5mafl";
-      const templateID = "template_53etai6";
-      const userID = "w45_OTiEFmmlREKb3";
-
-      const templateParams = {
-        from_name: formData.fullName,
-        from_email: formData.email,
-        message: formData.message,
-      };
-
-      // Import EmailJS dynamically to avoid build issues
       const emailjs = await import("@emailjs/browser");
 
-      // Send email using EmailJS
-      await emailjs.default.send(serviceID, templateID, templateParams, userID);
+      await emailjs.default.send(
+        "service_yi5mafl",
+        "template_53etai6",
+        {
+          from_name: formData.fullName,
+          from_email: formData.email,
+          message: formData.message,
+        },
+        "w45_OTiEFmmlREKb3"
+      );
 
       setSubmitStatus("success");
       setFormData({ fullName: "", email: "", message: "" });
@@ -51,111 +69,113 @@ const Contact = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
-      className="px-6 sm:px-8 md:px-12 py-8 flex flex-col items-center justify-center"
+      className="px-6 sm:px-8 md:px-12 py-8 flex flex-col items-center justify-center font-inter"
     >
-      <div className="max-w-7xl w-full text-center">
-        {/* Title Section */}
-        <div className="flex items-center justify-center mb-10 sm:mb-12 md:mb-16">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight relative inline-block">
-            Get In Touch
-            {/* Decorative underline/element */}
-            <span className="absolute bottom-0 left-0 w-full h-1.5 sm:h-2 bg-gradient-to-r from-purple-500 to-blue-500 opacity-30"></span>
-          </h2>
+      {/* Heading */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold relative inline-block leading-tight">
+          Get In Touch
+          <span className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 rounded-full"></span>
+        </h2>
+      </div>
+
+      {/* Contact Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-xl md:max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-8"
+      >
+        {/* Full Name */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="fullName"
+            className="text-base sm:text-lg font-semibold mb-2"
+          >
+            Full Name
+          </label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            placeholder="Your name"
+            value={formData.fullName}
+            onChange={handleInputChange}
+            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
+            required
+          />
         </div>
 
-        {/* Contact Form */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-12 gap-y-6 sm:gap-y-8 max-w-lg mx-auto md:max-w-full">
-          {/* Full Name Input */}
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="fullName"
-              className="text-lg sm:text-xl md:text-2xl font-semibold mb-2"
-            >
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              placeholder="Enter Your Name"
-              className="w-full bg-transparent border-b border-gray-600 text-white placeholder-gray-500 pb-2 focus:outline-none focus:border-white text-base sm:text-lg"
-              required
-            />
-          </div>
-          {/* Mail Input */}
-          <div className="flex flex-col items-start">
-            <label
-              htmlFor="email"
-              className="text-lg sm:text-xl md:text-2xl font-semibold mb-2"
-            >
-              Mail
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter Mail"
-              className="w-full bg-transparent border-b border-gray-600 text-white placeholder-gray-500 pb-2 focus:outline-none focus:border-white text-base sm:text-lg"
-              required
-            />
-          </div>
-          {/* Message Input */}
-          <div className="md:col-span-2 flex flex-col items-start">
-            <label
-              htmlFor="message"
-              className="text-lg sm:text-xl md:text-2xl font-semibold mb-2"
-            >
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              placeholder="Don't Be Shy, Write A Message And Send It Now"
-              rows="4"
-              className="w-full bg-transparent border-b border-gray-600 text-white placeholder-gray-500 pb-2 focus:outline-none focus:border-white text-base sm:text-lg resize-none"
-              required
-            ></textarea>
-          </div>
+        {/* Email */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="email"
+            className="text-base sm:text-lg font-semibold mb-2"
+          >
+            Mail
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter Mail"
+            value={formData.email}
+            onChange={handleInputChange}
+            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
+            required
+          />
+        </div>
 
-          {/* Status Messages */}
-          {submitStatus === "success" && (
-            <div className="md:col-span-2 text-center">
-              <p className="text-green-500 font-semibold">
-                Message sent successfully! 🎉
-              </p>
-            </div>
-          )}
-          {submitStatus === "error" && (
-            <div className="md:col-span-2 text-center">
-              <p className="text-red-500 font-semibold">
-                Failed to send message. Please try again.
-              </p>
-            </div>
-          )}
+        {/* Message */}
+        <div className="md:col-span-2 flex flex-col">
+          <label
+            htmlFor="message"
+            className="text-base sm:text-lg font-semibold mb-2"
+          >
+            Message
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Don't be shy, drop a message..."
+            value={formData.message}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 resize-none focus:outline-none focus:border-white transition-all duration-300"
+            required
+          ></textarea>
+        </div>
 
-          <div className="md:col-span-2 text-center mt-6 sm:mt-8">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-              className={`px-6 py-2.5 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 ${
-                isSubmitting
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                  : "bg-white text-black"
+        {/* Feedback Status */}
+        {submitStatus && (
+          <div className="md:col-span-2 text-center">
+            <p
+              className={`font-semibold ${
+                submitStatus === "success" ? "text-green-400" : "text-red-500"
               }`}
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
-            </button>
+              {submitStatus === "success"
+                ? "Message sent successfully! 🎉"
+                : "Failed to send message. Please try again."}
+            </p>
           </div>
+        )}
+
+        {/* Submit Button */}
+        <div className="md:col-span-2 flex justify-center">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`px-6 py-3 rounded-full text-base sm:text-lg font-semibold shadow-xl transition-all duration-300 transform ${
+              isSubmitting
+                ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                : "bg-white text-black hover:shadow-2xl hover:-translate-y-1"
+            }`}
+          >
+            {isSubmitting ? "Sending..." : "Send Message"}
+          </button>
         </div>
-      </div>
+      </form>
     </section>
   );
 };

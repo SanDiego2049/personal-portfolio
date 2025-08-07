@@ -1,43 +1,71 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Menu, X, Download } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 import resume from "../assets/Oreoluwa Alaba Resume.pdf";
 import logo from "../assets/portfolio_favicon.svg";
+import ThemeToggle from "./ThemeToggle";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const menuItems = [
+  { id: "hero", label: "home" },
+  { id: "services", label: "about" },
+  { id: "projects", label: "projects" },
+  { id: "contact", label: "contact" },
+  { id: "socials", label: "socials" },
+];
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [isOpen, setIsOpen] = useState(false);
 
-  const menuItems = [
-    { id: "hero", label: "home" },
-    { id: "about", label: "about" },
-    { id: "projects", label: "projects" },
-    { id: "contact", label: "contact" },
-    { id: "socials", label: "socials" },
-  ];
+  // GSAP animation on mount
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-  // Handle scroll effect for active section
+      // Logo animation
+      tl.from(".nav-logo", {
+        opacity: 0,
+        y: 0,
+        duration: 0.6,
+      });
+
+      // Nav links
+      tl.from(".nav-link", {
+        opacity: 0,
+        y: -10,
+        duration: 0.4,
+        stagger: 0.1,
+      });
+
+      // Resume button (only animate if it's visible in DOM)
+      if (window.innerWidth >= 768) {
+        tl.from(".resume-btn", {
+          opacity: 0,
+          y: 0,
+          duration: 0.4,
+        });
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Scroll tracking
   useEffect(() => {
     const handleScroll = () => {
-      // Get navbar height dynamically
-      const navbar = document.querySelector("nav");
-      const navbarHeight = navbar ? navbar.offsetHeight : 80;
-      const offset = navbarHeight + 50;
-
-      // Update active section based on scroll position
-      const sections = menuItems.map((item) => item.id);
-      const current = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
+      const offset = 100;
+      const current = menuItems.find((section) => {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
           return rect.top <= offset && rect.bottom >= offset;
         }
         return false;
       });
-
-      if (current) {
-        setActiveSection(current);
-      }
+      if (current) setActiveSection(current.id);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -45,35 +73,19 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      // Get navbar height dynamically
-      const navbar = document.querySelector("nav");
-      const navbarHeight = navbar ? navbar.offsetHeight : 80;
-
-      // Calculate the target position
-      const elementPosition =
-        element.getBoundingClientRect().top + window.pageYOffset;
-      const targetPosition = elementPosition - navbarHeight - 20;
-
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      });
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const navHeight = document.querySelector("nav")?.offsetHeight || 80;
+      const offsetTop = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: offsetTop - navHeight - 10, behavior: "smooth" });
+      setIsOpen(false);
     }
-    setIsOpen(false);
   };
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // Handle resume download
   const handleResumeDownload = () => {
-    const resumeUrl = resume;
     const link = document.createElement("a");
-    link.href = resumeUrl;
+    link.href = resume;
     link.download = "Oreoluwa_Alaba_Resume.pdf";
     document.body.appendChild(link);
     link.click();
@@ -81,117 +93,93 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <img width={40} height={40} src={logo} alt="My Logo" />
-            </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-md transition-all">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="flex justify-between items-center h-16 lg:h-20">
+          {/* Logo */}
+          <button
+            onClick={() => scrollToSection("hero")}
+            aria-label="Scroll to top"
+            className="nav-logo"
+          >
+            <img src={logo} alt="Logo" className="w-10 h-10" />
+          </button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`
-                    text-sm font-medium transition-all duration-300 relative uppercase
-                    ${
-                      activeSection === item.id
-                        ? "text-black dark:text-white"
-                        : "text-gray-400 hover:text-black dark:hover:text-white"
-                    }
-                  `}
-                >
-                  {item.label}
-                  {activeSection === item.id && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-black dark:bg-white"></div>
-                  )}
-                </button>
-              ))}
-              <ThemeToggle />
-            </div>
-
-            {/* Desktop Resume Button */}
-            <div className="hidden md:flex items-center">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            {menuItems.map((item) => (
               <button
-                onClick={handleResumeDownload}
-                className="flex items-center gap-2 text-black dark:text-white font-extrabold py-2 text-md uppercase cursor-pointer transition-colors duration-300 hover:text-purple-500"
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`nav-link cursor-pointer relative uppercase text-sm font-medium transition-colors duration-300 ${
+                  activeSection === item.id
+                    ? "text-black dark:text-white"
+                    : "text-gray-400 hover:text-black dark:hover:text-white"
+                }`}
               >
-                Resume
-                <Download size={20} />
-              </button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center gap-3">
-              <ThemeToggle />
-              <button
-                onClick={toggleMenu}
-                className="p-2 text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300"
-                aria-label="Toggle menu"
-              >
-                {isOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
+                <span className="relative z-10">{item.label}</span>
+                {activeSection === item.id && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black dark:bg-white rounded" />
                 )}
               </button>
-            </div>
+            ))}
+            <ThemeToggle />
+          </div>
+
+          {/* Resume Button (Desktop) */}
+          <div className="hidden md:flex items-center">
+            <button
+              onClick={handleResumeDownload}
+              className="resume-btn cursor-pointer group flex items-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform"
+            >
+              Resume
+              <Download className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-black dark:text-white"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Navigation Overlay */}
-        <div
-          className={`
-          md:hidden absolute top-full left-0 right-0 transition-all duration-300 overflow-hidden
-          ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-        `}
-        >
-          <div className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
-            <div className="container mx-auto px-6 py-6">
-              <div className="space-y-4">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`
-                      block w-full text-sm text-left py-3 font-medium uppercase transition-colors duration-300
-                      ${
-                        activeSection === item.id
-                          ? "text-black dark:text-white"
-                          : "text-gray-400 hover:text-black dark:hover:text-white"
-                      }
-                    `}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-
-                {/* Mobile Resume Button */}
-                <button
-                  onClick={handleResumeDownload}
-                  className="w-full flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full font-medium hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors duration-300 mt-6"
-                >
-                  Resume
-                  <Download className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile menu backdrop */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div
-          className="md:hidden fixed inset-0 z-40 bg-black/50"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="md:hidden px-6 pt-4 pb-8 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 animate-slide-down origin-top">
+          <div className="flex flex-col space-y-4">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`uppercase cursor-pointer text-sm font-medium text-left ${
+                  activeSection === item.id
+                    ? "text-black dark:text-white"
+                    : "text-gray-400 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+
+            <button
+              onClick={handleResumeDownload}
+              className="mt-6 cursor-pointer w-full flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black py-3 rounded-full text-sm font-medium hover:scale-105 transition-transform"
+            >
+              Resume
+              <Download className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       )}
-    </>
+    </nav>
   );
 };
 

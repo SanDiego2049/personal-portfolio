@@ -46,51 +46,50 @@ const Footer = () => {
   const madeYear = 2025;
 
   return (
-    <footer id="socials" className="min-h-full px-6 sm:px-8 md:px-12 py-8">
-      <div className="max-w-8xl mx-auto flex flex-col items-center">
-        {/* Top Section: Follow Me and Social Icons */}
-        <div className="flex flex-col md:flex-row items-center justify-between w-full mb-10 sm:mb-12 md:mb-16 text-center md:text-left">
-          <div className="md:w-1/2 lg:w-2/3">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 md:mb-0">
-              Check Out My Socials
-            </h2>
-            {/* Tagline */}
-            <p className="text-base sm:text-lg text-gray-400 max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto md:mx-0 mb-8 sm:mb-12 md:mb-0">
-              Stay tuned for the latest design trends and development insights!
-            </p>
-          </div>
-          {/* Social Icons */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 flex-shrink-0">
-            {socialLinks.map((social) => {
-              const IconComponent = social.icon;
-              return (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  aria-label={social.name}
-                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full border dark:border-white flex items-center justify-center hover:bg-purple-500 hover:text-white transition-colors duration-300"
-                >
-                  <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10" />
-                </a>
-              );
-            })}
-          </div>
+    <footer
+      id="socials"
+      className="px-6 mt-16 sm:px-10 md:px-16 py-12 bg-black/90 backdrop-blur-md border-t border-gray-800"
+    >
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center space-y-16">
+        {/* Top Text */}
+        <div className="text-center">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight leading-tight">
+            Let's Connect Online
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+            Follow me on social media to get my latest design and dev
+            experiments, tutorials, and inspirations.
+          </p>
         </div>
 
-        {/* Bottom Section: Logo and Copyright */}
-        <div className="border-t border-gray-700 pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between w-full text-center md:text-left">
-          {/* Logo/Name */}
-          <div className="flex items-center mb-4 md:mb-0">
-            {/* Logo */}
-            <div className="flex-shrink-0 mr-1">
-              <img width={25} height={25} src={logo} alt="My Logo" />
-            </div>
+        {/* Social Icons */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
+          {socialLinks.map(({ name, icon: Icon, href }) => (
+            <a
+              key={name}
+              href={href}
+              aria-label={name}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 flex items-center justify-center hover:scale-110 backdrop-blur-sm"
+            >
+              <Icon className="w-6 h-6 text-white group-hover:text-purple-400 transition-colors duration-300" />
+            </a>
+          ))}
+        </div>
 
-            <span className="text-lg sm:text-xl font-bold">Sandiego2049</span>
+        {/* Footer Bottom */}
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-gray-700 text-center md:text-left text-sm text-gray-500">
+          <div className="flex items-center space-x-2">
+            <img src={logo} alt="Logo" width={22} height={22} />
+            <span className="font-semibold tracking-wide text-white">
+              Sandiego2049
+            </span>
           </div>
-          <p className="text-xs sm:text-sm text-gray-500">
-            Copyright &copy; {madeYear}
-            {currentYear > madeYear ? `- ${currentYear}` : ""} Oreoluwa Alaba
+          <p>
+            &copy; {madeYear}
+            {currentYear > madeYear ? ` – ${currentYear}` : ""} Oreoluwa Alaba.
+            All rights reserved.
           </p>
         </div>
       </div>

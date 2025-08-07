@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 
 const Home = () => {
   return (
-    <section className="bg-white text-gray-800 dark:bg-black dark:text-white">
+    <section className="bg-white text-gray-800 dark:bg-black dark:text-white overflow-x-hidden">
       <Navbar />
       <Hero />
       <Services />
