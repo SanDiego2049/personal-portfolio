@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Menu, X, Download } from "lucide-react";
@@ -19,20 +19,19 @@ const menuItems = [
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [isOpen, setIsOpen] = useState(false);
+  const mobileMenuRef = useRef(null);
 
   // GSAP animation on mount
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-      // Logo animation
       tl.from(".nav-logo", {
         opacity: 0,
         y: 0,
         duration: 0.6,
       });
 
-      // Nav links
       tl.from(".nav-link", {
         opacity: 0,
         y: -10,
@@ -40,7 +39,6 @@ const Navbar = () => {
         stagger: 0.1,
       });
 
-      // Resume button (only animate if it's visible in DOM)
       if (window.innerWidth >= 768) {
         tl.from(".resume-btn", {
           opacity: 0,
@@ -72,6 +70,33 @@ const Navbar = () => {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Animate mobile menu with GSAP
+  useEffect(() => {
+    if (!mobileMenuRef.current) return;
+
+    if (isOpen) {
+      gsap.fromTo(
+        mobileMenuRef.current,
+        { height: 0, opacity: 0, display: "none" },
+        {
+          height: "auto",
+          opacity: 1,
+          display: "block",
+          duration: 0.4,
+          ease: "power2.out",
+        }
+      );
+    } else {
+      gsap.to(mobileMenuRef.current, {
+        height: 0,
+        opacity: 0,
+        display: "none",
+        duration: 0.3,
+        ease: "power2.inOut",
+      });
+    }
+  }, [isOpen]);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -106,7 +131,7 @@ const Navbar = () => {
           </button>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {menuItems.map((item) => (
               <button
                 key={item.id}
@@ -127,7 +152,7 @@ const Navbar = () => {
           </div>
 
           {/* Resume Button (Desktop) */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <button
               onClick={handleResumeDownload}
               className="resume-btn cursor-pointer group flex items-center gap-2 bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform"
@@ -138,7 +163,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -151,34 +176,36 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden px-6 pt-4 pb-8 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 animate-slide-down origin-top">
-          <div className="flex flex-col space-y-4">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`uppercase cursor-pointer text-sm font-medium text-left ${
-                  activeSection === item.id
-                    ? "text-black dark:text-white"
-                    : "text-gray-400 hover:text-black dark:hover:text-white"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-
+      {/* Mobile Menu (always rendered, animated with GSAP) */}
+      <div
+        ref={mobileMenuRef}
+        className="lg:hidden overflow-hidden px-6 pt-4 pb-8 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800"
+        style={{ display: "none", height: 0, opacity: 0 }}
+      >
+        <div className="flex flex-col space-y-4">
+          {menuItems.map((item) => (
             <button
-              onClick={handleResumeDownload}
-              className="mt-6 cursor-pointer w-full flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black py-3 rounded-full text-sm font-medium hover:scale-105 transition-transform"
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className={`uppercase cursor-pointer text-sm font-medium text-left ${
+                activeSection === item.id
+                  ? "text-black dark:text-white"
+                  : "text-gray-400 hover:text-black dark:hover:text-white"
+              }`}
             >
-              Resume
-              <Download className="w-4 h-4" />
+              {item.label}
             </button>
-          </div>
+          ))}
+
+          <button
+            onClick={handleResumeDownload}
+            className="mt-6 cursor-pointer w-full flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black py-3 rounded-full text-sm font-medium hover:scale-105 transition-transform"
+          >
+            Resume
+            <Download className="w-4 h-4" />
+          </button>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
