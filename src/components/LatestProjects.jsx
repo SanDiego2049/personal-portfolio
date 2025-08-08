@@ -55,7 +55,7 @@ const LatestProjects = () => {
     >
       {/* Section Title */}
       <div className="relative mb-12 text-center">
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold relative inline-block text-white">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold relative inline-block">
           Latest Projects
           <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 rounded-full"></span>
         </h2>
