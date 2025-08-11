@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kudos-digitals.vercel.app/sitemap.xml
