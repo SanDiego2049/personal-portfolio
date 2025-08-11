@@ -87,7 +87,7 @@ const Hero = () => {
       {/* Foreground */}
       <div className="hero-container relative z-10 max-w-6xl mx-auto text-center flex flex-col items-center justify-center w-full">
         {/* Name */}
-        <h1 className="text-4xl md:text-6xl lg:text-9xl font-extrabold mb-8 text-neutral-900 dark:text-white">
+        <h1 className="text-4xl md:text-[6rem] xl:text-[10rem] font-extrabold mb-8 text-neutral-900 dark:text-white">
           <SplitText
             text="Oreoluwa Alaba"
             delay={100}
@@ -103,7 +103,7 @@ const Hero = () => {
         </h1>
 
         {/* Tagline */}
-        <p className="text-2xl md:text-4xl font-semibold mb-12 text-neutral-800 dark:text-neutral-200">
+        <p className="text-xl md:text-4xl font-semibold mb-12 text-neutral-800 dark:text-neutral-200">
           Designing Systems. Building Interfaces. Engineering Experiences.
         </p>
 

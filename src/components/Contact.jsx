@@ -77,7 +77,7 @@ const Contact = () => {
       <div className="text-center mb-12">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold relative inline-block leading-tight">
           Get In Touch
-          <span className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 rounded-full"></span>
+          <span className="absolute bottom-1 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-20 rounded-full"></span>
         </h2>
       </div>
 

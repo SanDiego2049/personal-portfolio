@@ -118,12 +118,12 @@ const Services = () => {
   return (
     <section
       id="services"
-      className="min-h-full mb-16 px-6 sm:px-8 md:px-12 flex flex-col lg:flex-row items-start justify-center gap-12"
+      className="min-h-full mb-16 px-6 sm:px-8 md:px-12 flex flex-col lg:flex-row items-center justify-center gap-12"
     >
       {/* Left Section: Title + Description */}
       <div
         ref={leftRef}
-        className="md:w-3/4 w-full p-4 text-center md:text-left"
+        className="lg:w-3/4 w-full p-4 text-center lg:text-left"
       >
         <div className="flex items-center justify-center lg:justify-start mb-4">
           <span className="hidden md:flex text-4xl mr-2">✨</span>
@@ -145,7 +145,7 @@ const Services = () => {
       </div>
 
       {/* Right Section: Accordion List */}
-      <div ref={rightRef} className="md:w-1/2 w-full p-4">
+      <div ref={rightRef} className="lg:w-1/2 w-full p-4">
         <div className="space-y-4">
           {servicesList.map((service) => (
             <AccordionItem
