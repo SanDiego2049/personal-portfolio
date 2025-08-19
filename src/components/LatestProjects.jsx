@@ -51,7 +51,7 @@ const LatestProjects = () => {
   return (
     <section
       id="projects"
-      className="mb-16 px-6 sm:px-10 md:px-16 py-8 font-inter flex flex-col items-center"
+      className="mb-16 px-6 sm:px-10 md:px-16 py-8 flex flex-col items-center"
     >
       {/* Section Title */}
       <div className="relative mb-12 text-center">
