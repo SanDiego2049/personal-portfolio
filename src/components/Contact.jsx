@@ -71,7 +71,7 @@ const Contact = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className="px-6 sm:px-8 md:px-12 py-8 flex flex-col items-center justify-center font-inter"
+      className="px-6 sm:px-8 md:px-12 py-8 flex flex-col items-center justify-center"
     >
       {/* Heading */}
       <div className="text-center mb-12">
@@ -101,7 +101,7 @@ const Contact = () => {
             placeholder="Your name"
             value={formData.fullName}
             onChange={handleInputChange}
-            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
+            className="w-full bg-transparent border-b border-gray-700 placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
             required
           />
         </div>
@@ -121,7 +121,7 @@ const Contact = () => {
             placeholder="Enter Mail"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
+            className="w-full bg-transparent border-b border-gray-700 placeholder-gray-500 py-2 focus:outline-none focus:border-white transition-all duration-300"
             required
           />
         </div>
@@ -141,7 +141,7 @@ const Contact = () => {
             value={formData.message}
             onChange={handleInputChange}
             rows={4}
-            className="w-full bg-transparent border-b border-gray-700 text-white placeholder-gray-500 py-2 resize-none focus:outline-none focus:border-white transition-all duration-300"
+            className="w-full bg-transparent border-b border-gray-700 placeholder-gray-500 py-2 resize-none focus:outline-none focus:border-white transition-all duration-300"
             required
           ></textarea>
         </div>
