@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Menu, X, Download } from "lucide-react";
-import resume from "../assets/Oreoluwa Alaba Resume.pdf";
+import resume from "../assets/Oreoluwa Alaba Internship Resume.pdf";
 import logo from "../assets/portfolio_favicon.svg";
 import ThemeToggle from "./ThemeToggle";
 
