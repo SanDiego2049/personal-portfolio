@@ -23,10 +23,10 @@ const LatestProjects = () => {
     },
     {
       id: "03",
-      title: "The Digital Agency – Creative Solutions, Modern Presence",
+      title: "CrabCross Technologies – Creative Solutions, Modern Presence",
       description:
-        "A sleek, responsive landing page for a forward-thinking digital agency. Built to capture attention and convey credibility, it showcases services, values, and brand personality with bold visuals, smooth animations, and a strategic content layout that converts visitors into clients.",
-      link: "https://the-digital-agency.vercel.app/",
+        "A sleek, responsive website for a forward-thinking cybersecurity-focused agency. Built to capture attention and convey credibility, it showcases services, values, and brand personality with bold visuals, smooth animations, and a strategic content layout that converts visitors into clients.",
+      link: "https://www.crabcrosstech.com",
     },
     {
       id: "04",
